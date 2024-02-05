@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +27,6 @@ Route::group(['prefix' => 'v1'], function () {
         ->name('login');
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::apiResource('users', UserController::class);
     });
 });
