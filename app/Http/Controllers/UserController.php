@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserCollection;
 
 class UserController extends Controller
 {
@@ -12,14 +15,9 @@ class UserController extends Controller
     public function index()
     {
         //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'users' => new UserCollection(User::where('role', 'customer')->get())
+        ], 200);
     }
 
     /**
@@ -28,37 +26,64 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            $newUser = User::create($request->validated());
+
+            return response()->json([
+                'user' => new UserResource($newUser)
+            ], 201);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
         //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return response()->json([
+            'user' => new UserResource($user)
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
         //
+        try {
+            $user->update($request->validated());
+
+            return response()->json([
+                'user' => new UserResource($user)
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
         //
+        try {
+            return response()->json($user->delete(), 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 }
