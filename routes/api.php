@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -17,7 +18,9 @@ use App\Http\Controllers\UserController;
 */
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json([
+        'user' => new UserResource($request->user())
+    ], 200);
 });
 
 Route::group(['prefix' => 'v1'], function () {
@@ -27,6 +30,10 @@ Route::group(['prefix' => 'v1'], function () {
         ->name('login');
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('/verify-token', function () {
+            return response()->json(['message' => 'Token is valid']);
+        });
+
         Route::apiResource('users', UserController::class);
     });
 });
