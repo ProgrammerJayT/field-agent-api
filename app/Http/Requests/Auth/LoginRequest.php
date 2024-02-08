@@ -54,14 +54,10 @@ class LoginRequest extends FormRequest
         RateLimiter::clear($this->throttleKey());
 
         $user = auth()->user();
-
         $token = $user->createToken('auth')->plainTextToken;
 
         return response()->json([
-            'user' => [
-                'profile' => new UserResource($user),
-                'authentication' => $token
-            ]
+            'token' => $token
         ], 200);
     }
 
