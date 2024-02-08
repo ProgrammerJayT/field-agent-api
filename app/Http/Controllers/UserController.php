@@ -16,7 +16,7 @@ class UserController extends Controller
     {
         //
         return response()->json([
-            'users' => new UserCollection(User::where('role', 'customer')->get())
+            'users' => new UserCollection(User::all())
         ], 200);
     }
 
