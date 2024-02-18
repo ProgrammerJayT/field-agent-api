@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customer_views', function (Blueprint $table) {
             $table->integer('customer_view_id')->autoIncrement();
-            $table->integer('viewer_id');
+            $table->integer('user_id');
             $table->integer('customer_id');
             $table->timestamps();
         });
