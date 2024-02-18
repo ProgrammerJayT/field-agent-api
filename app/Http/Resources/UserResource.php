@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
 
 class UserResource extends JsonResource
 {
@@ -17,11 +18,11 @@ class UserResource extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'id' => $this->user_id,
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'email' => $this->email,
-            'role' => $this->role,
+            'id' => Crypt::encrypt($this->user_id),
+            'name' => ucwords($this->name),
+            'surname' => ucwords($this->surname),
+            'email' => strtolower($this->email),
+            'role' => strtolower($this->role),
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
         ];
