@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,19 +26,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        try {
-            $newUser = User::create($request->validated());
+        $controller =  new RegisteredUserController();
 
-            return response()->json([
-                'user' => new UserResource($newUser)
-            ], 201);
-        } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json([
-                'message' => $th->getMessage()
-            ], 500);
-        }
+        return $controller->store($request);
     }
 
     /**
