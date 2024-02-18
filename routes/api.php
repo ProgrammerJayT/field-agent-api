@@ -40,6 +40,8 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::get('view-customer', [CustomerController::class, 'viewCustomer']);
 
+        Route::get('create-customers-views/{id}', [CustomerViewController::class, "createView"]);
+
         Route::apiResource('users', UserController::class);
     });
 });
