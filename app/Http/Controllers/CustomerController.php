@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserCollection;
+use App\Models\CustomerView;
+use Illuminate\Support\Facades\Crypt;
 
 class CustomerController extends Controller
 {
@@ -17,14 +20,6 @@ class CustomerController extends Controller
         return response()->json([
             'customers' => new UserCollection(User::where('role', 'customer')->get())
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -41,14 +36,15 @@ class CustomerController extends Controller
     public function show(string $id)
     {
         //
-    }
+        $user = User::find(Crypt::decrypt($id));
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        if (!$user) return response()->json([
+            'message' => 'User not found'
+        ], 404);
+
+        return response()->json([
+            'customer' => new UserResource($user)
+        ], 200);
     }
 
     /**
