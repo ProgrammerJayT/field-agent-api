@@ -53,6 +53,33 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $decryptedId = Crypt::decrypt($id);
+        $user = User::find($decryptedId);
+
+        if (!$user) return response()->json([
+            "message" => "User not found"
+        ], 404);
+
+        $this->validate($request, [
+            'name' => ['sometimes', 'string'],
+            'surname' => ['sometimes', 'string'],
+            'email' => ['sometimes', 'email', 'unique:users,email,' . $user->user_id . ',user_id'],
+            'longitude' => ['sometimes', 'numeric'],
+            'latitude' => ['sometimes', 'numeric'],
+        ]);
+
+        $attributes = $request->input();
+        $updateAttributes = [];
+
+        foreach ($attributes as $key => $attribute) {
+            if ($user[$key] !== $attribute) $updateAttributes[$key] = $attribute;
+        }
+
+        $user->update($updateAttributes);
+
+        return response()->json([
+            'customer' => new UserResource($user)
+        ], 200);
     }
 
     /**
