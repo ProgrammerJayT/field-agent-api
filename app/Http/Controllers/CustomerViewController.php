@@ -25,7 +25,7 @@ class CustomerViewController extends Controller
                 ]);
 
                 return response()->json([
-                    'message' => 'View created successfully'
+                    'views' => new CustomerViewCollection(CustomerView::latest('updated_at')->take(5)->get())
                 ], 201);
             }
 
@@ -34,7 +34,7 @@ class CustomerViewController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'View updated successfully'
+                'views' => new CustomerViewCollection(CustomerView::latest('updated_at')->take(5)->get())
             ], 200);
         } catch (\Throwable $th) {
             //throw $th;
